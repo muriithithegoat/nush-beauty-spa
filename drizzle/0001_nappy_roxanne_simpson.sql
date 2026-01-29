@@ -1,0 +1,1 @@
+ALTER TABLE "users" ADD COLUMN "_temp" integer DEFAULT 0;

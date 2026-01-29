@@ -1,0 +1,9 @@
+{
+  "schema": "./src/Drizzle/schema.ts",
+  "out": "./drizzle",
+  "dialect": "postgresql",
+  "dbCredentials": {
+    "url": "postgres://postgres:Nushkez18.@localhost:5432/nushka_beauty_spa"
+  }
+}
+
