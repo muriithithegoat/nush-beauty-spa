@@ -17,7 +17,7 @@ app.use(cors())
 // Your existing routes (keep these)
 app.use("/api/users", usersRouter)
 app.use("/api/support", supportRouter)
-app.use("/api/payment", PaymentRouter)
+app.use("/api/payments", paymentsRouter)
 
 // TEMPORARILY REMOVE THIS LINE - it's causing the 404
 // app.use("/api/bookings", bookingsRouter)
@@ -30,6 +30,7 @@ import {
   updateBookingController,
   deleteBookingController
 } from "./bookings/bookings.controller";
+import paymentsRouter from "./payments/payments.router"
 
 // Direct bookings routes - add these:
 app.post("/api/bookings", createBookingController);

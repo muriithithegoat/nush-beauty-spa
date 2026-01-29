@@ -31,14 +31,21 @@ export const getpaymentsController = async (_req: Request, res: Response) => {
 
 
 export const getpaymentsByIdController = async (req: Request, res: Response) => {
+    const id = parseInt(req.params.id);
+    console.log('Looking for payment with ID:', id); // Add this
+
   try {
     const id = parseInt(req.params.id);
     if (isNaN(id)) return res.status(400).json({ message: "Invalid ID" });
 
     const payments = await getpaymentsByIdService(id);
+        console.log('Found payment:', payments); // Add this
+
     if (!payments) return res.status(404).json({ message: "payments not found" });
     return res.status(200).json({ data: payments });
   } catch (error: any) {
+        console.error('Error fetching payment:', error);
+
     return res.status(500).json({ error: error.message });
   }
 };
