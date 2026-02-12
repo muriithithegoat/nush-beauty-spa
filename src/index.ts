@@ -3,6 +3,7 @@ import usersRouter from "./users/users.router"
 import PaymentRouter from "./payments/payments.router"
 import authRouter from "./auth/auth.router"
 import supportRouter from "./supportticket/support.router"
+import adminRouter from "./admin/admin.router"
 import cors from 'cors'
 
 // COMMENT OUT THE PROBLEMATIC IMPORT
@@ -18,6 +19,7 @@ app.use(cors())
 app.use("/api/users", usersRouter)
 app.use("/api/support", supportRouter)
 app.use("/api/payments", paymentsRouter)
+app.use("/api/admin", adminRouter)
 
 // TEMPORARILY REMOVE THIS LINE - it's causing the 404
 // app.use("/api/bookings", bookingsRouter)

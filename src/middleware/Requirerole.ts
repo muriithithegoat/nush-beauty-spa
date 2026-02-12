@@ -1,9 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 
+export type UserRole = "customer" | "admin" | "staff";
+
 declare global {
   namespace Express {
     interface User {
-      role: "user" | "admin";
+      userID: number;
+      email: string;
+      role: UserRole;
     }
     interface Request {
       user?: User;
@@ -12,10 +16,10 @@ declare global {
 }
 
 // Only allow a specific role
-export function requireRole(role: "user" | "admin") {
+export function requireRole(role: UserRole) {
   return (req: Request, res: Response, next: NextFunction): void => {
     if (!req.user || req.user.role !== role) {
-      res.status(403).json({ message: `Access denied. ${role} only.` });
+      res.status(403).json({ message: `Access denied. ${role} role required.` });
       return;
     }
     next();
@@ -23,7 +27,7 @@ export function requireRole(role: "user" | "admin") {
 }
 
 // Allow any of multiple roles
-export function requireAnyRole(...roles: ("user" | "admin")[]) {
+export function requireAnyRole(...roles: UserRole[]) {
   return (req: Request, res: Response, next: NextFunction): void => {
     if (!req.user || !roles.includes(req.user.role)) {
       res.status(403).json({ message: `Access denied. Allowed roles: ${roles.join(", ")}` });
@@ -31,4 +35,22 @@ export function requireAnyRole(...roles: ("user" | "admin")[]) {
     }
     next();
   };
+}
+
+// Check if user is admin
+export function requireAdmin(req: Request, res: Response, next: NextFunction): void {
+  if (!req.user || req.user.role !== "admin") {
+    res.status(403).json({ message: "Access denied. Admin role required." });
+    return;
+  }
+  next();
+}
+
+// Check if user is customer
+export function requireCustomer(req: Request, res: Response, next: NextFunction): void {
+  if (!req.user || req.user.role !== "customer") {
+    res.status(403).json({ message: "Access denied. Customer role required." });
+    return;
+  }
+  next();
 }

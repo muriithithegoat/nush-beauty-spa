@@ -6,22 +6,24 @@ import {
   updateusersController,
   deleteusersController 
 } from "./users.controller";
+import { authenticate } from "../middleware/auth";
+import { requireAdmin } from "../middleware/Requirerole";
 
 const router = Router();
 
-// POST /api/users/register
+// POST /api/users/register (public)
 router.post("/register", createusersController);
 
-// GET /api/users
-router.get("/", createusersController);
+// GET /api/users - List all users (admin only)
+router.get("/", authenticate, requireAdmin, getusersController);
 
-// GET /api/users/:id
-router.get("/:id", getusersByIdController);
+// GET /api/users/:id - Get user by ID (authenticated users)
+router.get("/:id", authenticate, getusersByIdController);
 
-// PUT /api/users/:id
-router.put("/:id", updateusersController);
+// PUT /api/users/:id - Update user (authenticated users)
+router.put("/:id", authenticate, updateusersController);
 
-// DELETE /api/users/:id
-router.delete("/:id", deleteusersController);
+// DELETE /api/users/:id - Delete user (admin only)
+router.delete("/:id", authenticate, requireAdmin, deleteusersController);
 
 export default router;

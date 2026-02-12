@@ -1,13 +1,16 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import type { UserRole } from './Requirerole';
 
-interface AuthRequest extends Request {
-  user?: any;
+interface JWTPayload {
+  userID: number;
+  email: string;
+  role: UserRole;
 }
 
-const JWT_SECRET = process.env.JWT_SECRET!;
+const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey';
 
-export const authenticate = (req: AuthRequest, res: Response, next: NextFunction): void => {
+export const authenticate = (req: Request, res: Response, next: NextFunction): void => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -18,8 +21,12 @@ export const authenticate = (req: AuthRequest, res: Response, next: NextFunction
   const token = authHeader.split(' ')[1];
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    req.user = decoded;
+    const decoded = jwt.verify(token, JWT_SECRET) as JWTPayload;
+    req.user = {
+      userID: decoded.userID,
+      email: decoded.email,
+      role: decoded.role
+    };
     next();
   } catch (error) {
     res.status(401).json({ message: 'Unauthorized: Invalid token' });
